@@ -1,8 +1,14 @@
 const menuButton = document.getElementById("menu-button");
 const navLinks = document.querySelector(".nav-links");
+const navItems = document.querySelectorAll(".nav-links a");
 
 menuButton.addEventListener("click", function() {
     navLinks.classList.toggle("active");
+});
+navItems.forEach(function(item) {
+    item.addEventListener("click", function() {
+        navLinks.classList.remove("active");
+    });
 });
 
 const darkModeButton = document.getElementById("dark-mode-button");
