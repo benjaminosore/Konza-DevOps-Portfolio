@@ -5,6 +5,7 @@ const navItems = document.querySelectorAll(".nav-links a");
 menuButton.addEventListener("click", function() {
     navLinks.classList.toggle("active");
 });
+
 navItems.forEach(function(item) {
     item.addEventListener("click", function() {
         navLinks.classList.remove("active");
@@ -26,20 +27,45 @@ darkModeButton.addEventListener("click", function() {
 });
 
 const contactForm = document.getElementById("contact-form");
-contactForm.addEventListener("submit", function(event) {
+
+contactForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const message = document.getElementById("message").value;
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
 
     if (name === "" || email === "" || message === "") {
         alert("Please fill in all fields.");
         return;
     }
 
-    alert("Thank you! Your message has been received.");
-    contactForm.reset();
+    try {
+        const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                message: message
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Failed to send message");
+        }
+
+        alert(result.message);
+        contactForm.reset();
+
+    } catch (error) {
+        console.error("Contact form error:", error);
+        alert("Sorry, your message could not be sent.");
+    }
 });
 
 const scrollTopButton = document.getElementById("scroll-top-button");
@@ -63,6 +89,7 @@ if (localStorage.getItem("darkMode") === "enabled") {
     document.body.classList.add("dark-mode");
     darkModeButton.textContent = "☀️";
 }
+
 // Load projects from PHP API
 async function loadProjects() {
     const projectsContainer = document.querySelector('.projects-container');
@@ -83,9 +110,10 @@ async function loadProjects() {
             projectCard.classList.add('project-card');
 
             projectCard.innerHTML = `
-             <div class="project-image">
-        <img src="${project.image}" alt="${project.name}">
-    </div>
+                <div class="project-image">
+                    <img src="${project.image}" alt="${project.name}">
+                </div>
+
                 <div class="project-content">
                     <h3>${project.name}</h3>
 
