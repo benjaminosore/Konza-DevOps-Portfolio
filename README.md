@@ -191,3 +191,18 @@ Project Status
 Active development
 
 This portfolio is being developed and improved as part of my practical software development and DevOps experience.
+
+### Dynamic Project Data
+
+The portfolio uses a JSON file (`api/data/projects.json`) as the data source for its projects.
+
+The PHP projects controller reads the JSON file and returns the project list through the `GET /api/projects` endpoint. The frontend JavaScript fetches this data and dynamically generates project cards.
+
+This approach separates project data from the PHP controller and frontend presentation. Adding a project to the JSON file allows the API and frontend to display it without requiring a new PHP function or manually writing another project card.
+
+**Testing performed:**
+
+-Confirmed that the API returns project data in JSON format.
+-Added ShopFlow as a third project in the JSON file.
+-Verified that the API returned all three projects.
+-Confirmed that all three projects appeared on the portfolio webpage.
